@@ -13,11 +13,9 @@ const rememberMe = useTemplateRef('rememberMe')
 
 const loginForm = ref<CustomFormData[]>([
   {
-    id: 'email',
+    id: 'telephone',
     value: '',
-    label: '邮箱',
-    type: 'email',
-    autocomplete: 'email',
+    label: '手机号',
   },
   {
     id: 'password',
