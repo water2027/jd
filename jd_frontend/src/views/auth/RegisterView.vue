@@ -23,11 +23,9 @@ const registerForm = ref<CustomFormData[]>([
     autocomplete: 'username',
   },
   {
-    id: 'email',
+    id: 'telephone',
     value: '',
-    label: '邮箱',
-    type: 'email',
-    autocomplete: 'email',
+    label: '手机号',
   },
   {
     id: 'password',
