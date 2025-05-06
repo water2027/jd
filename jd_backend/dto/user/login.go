@@ -5,15 +5,15 @@ import (
 )
 
 type LoginRequest struct {
-	Email    string `json:"email" binding:"required,email"`
+	Telephone    string `json:"email" binding:"required,email"`
 	Password string `json:"password" binding:"required,min=6"`
 }
 
 func (r *LoginRequest) Examine() error {
-	email := r.Email
+	telephone := r.Telephone
 	password := r.Password
-	if email == "" || password == "" {
-		return fmt.Errorf("邮箱和密码不能为空")
+	if telephone == "" || password == "" {
+		return fmt.Errorf("手机号和密码不能为空")
 	}
 	return nil
 }

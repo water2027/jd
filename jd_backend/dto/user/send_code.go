@@ -6,12 +6,12 @@ import (
 )
 
 type SendVCodeRequest struct {
-	Email string `json:"email" binding:"required,email"`
+	Telephone string `json:"email" binding:"required,email"`
 }
 
-func (r *SendVCodeRequest) Examine() error {	
-	reg := regexp2.MustCompile(`^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$`, 0)
-	isMatch, _ := reg.MatchString(r.Email)
+func (r *SendVCodeRequest) Examine() error {
+	reg := regexp2.MustCompile(`/^(?:(?:\+|00)86)?1\d{10}$/`, 0)
+	isMatch, _ := reg.MatchString(r.Telephone)
 	if !isMatch {
 		return fmt.Errorf("邮箱不合格")
 	}

@@ -23,16 +23,16 @@ func (us *UserService) Register(req *dto.RegisterRequest) (dto.RegisterResponse,
 
 	user := userModel.User{
 		Name:     req.Name,
-		Email:    req.Email,
+		Telephone:    req.Telephone,
 	}
 
 	// 校验邮箱是否已注册
 	db := database.GetMysqlDb()
-	if err = db.Where("email = ?", req.Email).First(&user).Error; err == nil {
+	if err = db.Where("email = ?", req.Telephone).First(&user).Error; err == nil {
 		return registerResp, errors.New("邮箱已注册")
 	}
 
-	code, err := database.GetValue(req.Email)
+	code, err := database.GetValue(req.Telephone)
 
 	if err != nil {
 		return registerResp, err
@@ -71,7 +71,7 @@ func (us *UserService) Login(req *dto.LoginRequest) (*dto.LoginResponse, error) 
 	// 查询用户
 	db := database.GetMysqlDb()
 	user := userModel.User{}
-	if err = db.Where("email = ?", req.Email).First(&user).Error; err != nil {
+	if err = db.Where("telephone = ?", req.Telephone).First(&user).Error; err != nil {
 		return nil, errors.New("用户不存在")
 	}
 
@@ -99,13 +99,13 @@ func (us *UserService) SendVCode(req *dto.SendVCodeRequest) error {
 	code := utils.GetRandomCode()
 
 	// 发送验证码
-	err = utils.SendMail(req.Email, "验证码", code)
+	err = utils.SendMail(req.Telephone, "验证码", code)
 	if err != nil {
 		return err
 	}
 
 	// 存储验证码到数据库
-	err = database.SetValue(req.Email, code, time.Minute * 5)
+	err = database.SetValue(req.Telephone, code, time.Minute * 5)
 	if err != nil {
 		return err
 	}
