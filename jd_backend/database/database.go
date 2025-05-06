@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-	if(os.Getenv("GO_ENV") != "docker") {
+	if(os.Getenv("GIN_MODE") != "release") {
 		err := godotenv.Load()
 		if err != nil {
 			panic("Error loading .env file")
