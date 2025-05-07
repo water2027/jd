@@ -1,7 +1,7 @@
 /* eslint-disable vue/one-component-per-file */
 import { createApp, defineComponent } from 'vue';
 
-import '@/assets/MessageBox.css';
+import '@/assets/MessageBox.scss';
 
 interface MessageBoxProps {
 	msg: string;
