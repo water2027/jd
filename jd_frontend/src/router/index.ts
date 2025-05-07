@@ -1,5 +1,27 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import apiBus from '@/utils/apiBus'
+import { createRouter, createWebHistory } from 'vue-router';
+import LoginView from '@/views/LoginView.vue';
+import UploadView from '@/views/UploadView.vue';
+import PostPage from '../views/PostPage.vue';
+
+const routes = [
+  {
+    path: '/login',
+    component: LoginView
+  },
+  {
+    path: '/upload',
+    component: UploadView,
+    meta: { requiresAuth: true } // 需要登录才能访问
+  },
+  {
+    path: '/post', // 添加 /post 路由规则
+    component: PostPage
+  },
+  {
+    path: '/',
+    redirect: '/login'
+  }
+];
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,25 +48,17 @@ const router = createRouter({
         },
       ]
     },
-  ],
-})
+    ...routes // 合并前面定义的路由
+  ]
+});
 
-const logout = () => {
-  router.push('/auth/login')
-}
+// 路由守卫，验证用户是否登录
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth && !localStorage.getItem('token')) {
+    next('/login');
+  } else {
+    next();
+  }
+});
 
-apiBus.on('API:UN_AUTH', () => {
-  logout()
-})
-
-apiBus.on('API:LOGOUT', () => {
-  logout()
-})
-
-apiBus.on('API:LOGIN', (req) => {
-  const { stop } = req
-  if (stop) return
-  router.push('/')
-})
-
-export default router
+export default router;
