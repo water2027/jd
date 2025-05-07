@@ -10,10 +10,10 @@ type Post struct {
 	AuthorID    uint           `gorm:"not null"`
 	Title       string         `gorm:"size:255;not null"`
 	Content     string         `gorm:"type:text;not null"`
+	CoverImage  string         `gorm:"size:255"`
 	ViewCount   int            `gorm:"default:0"`
 	LikeCount   int            `gorm:"default:0"`
 	CommentCount int           `gorm:"default:0"`
-	CoverImage  string         `gorm:"size:255"`
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 	PublishedAt *time.Time
