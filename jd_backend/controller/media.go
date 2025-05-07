@@ -26,13 +26,13 @@ type MediaController struct {
 	mediaService *service.MediaService
 }
 
-func NewMediaController() *MediaController {
+func NewMediaController(mediaService *service.MediaService) *MediaController {
 	basePath := os.Getenv("BASE_PATH")
 	if basePath == "" {
 		basePath = "http://localhost:8080" // 默认值
 	}
 	return &MediaController{
-		mediaService: service.NewMediaService(),
+		mediaService: mediaService,
 		basePath: basePath,
 	}
 }

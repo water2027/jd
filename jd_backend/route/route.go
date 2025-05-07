@@ -28,9 +28,17 @@ func SetupRouter() *gin.Engine {
 	r.Use(middleware.AuthMiddleware())
 
 	user := controller.NewUserController(service.NewUserService())
+	media := controller.NewMediaController(service.NewMediaService())
+	post := controller.NewPostController(service.NewPostService())
 	// 设置路由组
 	api := r.Group("/api")
 	api.POST("/info", user.GetUserInfo)
+
+	mediaRoute := api.Group("/media")
+	mediaRoute.POST("/upload-image", media.UploadImage)
+
+	postRoute := api.Group("/post")
+	postRoute.POST("/create", post.CreatePost)
 
 	publicRoute := api.Group("/public")
 	publicRoute.POST("/register", user.Register)
