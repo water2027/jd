@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import LoginView from '../views/LoginView.vue';
-import UploadView from '../views/UploadView.vue';
+import LoginView from '@/views/LoginView.vue';
+import UploadView from '@/views/UploadView.vue';
+import PostPage from '../views/PostPage.vue';
 
 const routes = [
   {
@@ -11,6 +12,10 @@ const routes = [
     path: '/upload',
     component: UploadView,
     meta: { requiresAuth: true } // 需要登录才能访问
+  },
+  {
+    path: '/post', // 添加 /post 路由规则
+    component: PostPage
   },
   {
     path: '/',
@@ -43,8 +48,9 @@ const router = createRouter({
         },
       ]
     },
-  ],
-})
+    ...routes // 合并前面定义的路由
+  ]
+});
 
 // 路由守卫，验证用户是否登录
 router.beforeEach((to, from, next) => {
