@@ -1,6 +1,8 @@
 package service
 
-type MediaService struct {}
+import ()
+
+type MediaService struct{}
 
 func NewMediaService() *MediaService {
 	return &MediaService{}
