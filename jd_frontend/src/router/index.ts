@@ -1,27 +1,5 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import LoginView from '@/views/LoginView.vue';
-import UploadView from '@/views/UploadView.vue';
-import PostPage from '../views/PostPage.vue';
-
-const routes = [
-  {
-    path: '/login',
-    component: LoginView
-  },
-  {
-    path: '/upload',
-    component: UploadView,
-    meta: { requiresAuth: true } // 需要登录才能访问
-  },
-  {
-    path: '/post', // 添加 /post 路由规则
-    component: PostPage
-  },
-  {
-    path: '/',
-    redirect: '/login'
-  }
-];
+import { createRouter, createWebHistory } from 'vue-router'
+import apiBus from '@/utils/apiBus'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -30,6 +8,17 @@ const router = createRouter({
       path: '/',
       name: 'default',
       component: () => import('@/layouts/DefaultLayout.vue'),
+      children: [
+        {
+          path: '/upload',
+          component: () => import('@/views/UploadView.vue'),
+          meta: { requiresAuth: true }, // 需要登录才能访问
+        },
+        {
+          path: '/post', // 添加 /post 路由规则
+          component: () => import('@/views/PostPage.vue'),
+        },
+      ],
     },
     {
       path: '/auth/',
@@ -46,19 +35,36 @@ const router = createRouter({
           name: 'register',
           component: () => import('@/views/auth/RegisterView.vue'),
         },
-      ]
+      ],
     },
-    ...routes // 合并前面定义的路由
-  ]
-});
+  ],
+})
 
 // 路由守卫，验证用户是否登录
 router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth && !localStorage.getItem('token')) {
-    next('/login');
+    next('/login')
   } else {
-    next();
+    next()
   }
-});
+})
 
-export default router;
+const logout = () => {
+  router.push('/auth/login')
+}
+
+apiBus.on('API:LOGIN', (req) => {
+  const { stop } = req
+  if (stop) return
+  router.push('/')
+})
+
+apiBus.on('API:UN_AUTH', () => {
+  logout()
+})
+
+apiBus.on('API:LOGOUT', () => {
+  logout()
+})
+
+export default router
