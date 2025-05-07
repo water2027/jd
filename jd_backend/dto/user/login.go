@@ -5,7 +5,7 @@ import (
 )
 
 type LoginRequest struct {
-	Telephone    string `json:"email" binding:"required,email"`
+	Telephone    string `json:"telephone" binding:"required,telephone"`
 	Password string `json:"password" binding:"required,min=6"`
 }
 

@@ -9,7 +9,6 @@ interface ApiEvents {
     token: string
     name: string
     avatar: string
-    exp: number
     stop?: boolean
   }
 }

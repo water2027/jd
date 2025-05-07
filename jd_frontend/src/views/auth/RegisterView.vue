@@ -49,10 +49,10 @@ const registerForm = ref<CustomFormData[]>([
   },
 ])
 
-const emailIsCorrect = computed(() => {
-  const email = registerForm.value[1].value
-  const reg = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
-  return reg.test(email)
+const telephoneIsCorrect = computed(() => {
+  const telephone = registerForm.value[1].value
+  const reg = /^(?:(?:\+|00)86)?1\d{10}$/
+  return reg.test(telephone)
 })
 
 const correct = useFormExam(registerForm)
@@ -64,11 +64,11 @@ const passwordIsCorrect = computed(() => {
 })
 
 const sendCodeAction = async () => {
-  const email = registerForm.value[1].value
-  if (!emailIsCorrect.value) {
+  const telephone = registerForm.value[1].value
+  if (!telephoneIsCorrect.value) {
     return
   }
-  await sendCode({ email })
+  await sendCode({ telephone })
 }
 
 const registerAction = async () => {
@@ -77,16 +77,16 @@ const registerAction = async () => {
   }
 
   const name = registerForm.value[0].value
-  const email = registerForm.value[1].value
+  const telephone = registerForm.value[1].value
   const password = registerForm.value[2].value
   const password2 = registerForm.value[3].value
   const vcode = registerForm.value[4].value
 
   try {    
-    const resp = await register({ name, email, password, password2, vcode })
+    const resp = await register({ name, telephone, password, password2, vcode })
   
     if(rememberMe.value?.checked) {
-      localStorage.setItem('email', email)
+      localStorage.setItem('telephone', telephone)
       localStorage.setItem('password', password)
     }
     console.log('register')
@@ -127,10 +127,10 @@ const registerAction = async () => {
     <button
       type="button"
       @click.prevent="sendCodeAction"
-      :disabled="!emailIsCorrect"
+      :disabled="!telephoneIsCorrect"
       class="w-full h-10 bg-[#eb6b26] text-white border-0 text-lg cursor-pointer mt-5 rounded-[20px] flex justify-center items-center hover:bg-[#ff7e3b] disabled:bg-zinc-600"
     >
-      {{ emailIsCorrect ? '发送验证码' : '请填写正确邮箱' }}
+      {{ telephoneIsCorrect ? '发送验证码' : '请填写正确邮箱' }}
     </button>
   </FormContainer>
 </template>

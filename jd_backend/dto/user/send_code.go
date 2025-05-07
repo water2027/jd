@@ -6,7 +6,7 @@ import (
 )
 
 type SendVCodeRequest struct {
-	Telephone string `json:"email" binding:"required,email"`
+	Telephone string `json:"telephone" binding:"required,telephone"`
 }
 
 func (r *SendVCodeRequest) Examine() error {
