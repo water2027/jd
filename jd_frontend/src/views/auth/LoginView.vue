@@ -6,18 +6,16 @@ import type { CustomFormData } from '@/composables/FormExam'
 import { useFormExam } from '@/composables/FormExam'
 import { showMsg } from '@/components/MessageBox.tsx'
 
-// import { login } from '@/api/user/login'
+import { login } from '@/api/user/login'
 import apiBus from '@/utils/apiBus'
 
 const rememberMe = useTemplateRef('rememberMe')
 
 const loginForm = ref<CustomFormData[]>([
   {
-    id: 'email',
+    id: 'telephone',
     value: '',
-    label: '邮箱',
-    type: 'email',
-    autocomplete: 'email',
+    label: '手机号',
   },
   {
     id: 'password',
@@ -31,16 +29,16 @@ const loginForm = ref<CustomFormData[]>([
 const correct = useFormExam(loginForm)
 
 const loginAction = async () => {
-  const email = loginForm.value[0].value
+  const telephone = loginForm.value[0].value
   const password = loginForm.value[1].value
 
   try {
-    const resp = await login({ email, password })
+    const resp = await login({ telephone, password })
   
     apiBus.emit('API:LOGIN', resp)
   
     if(rememberMe.value?.checked) {
-      localStorage.setItem('email', email)
+      localStorage.setItem('telephone', telephone)
       localStorage.setItem('password', password)
     }
   } catch (error) {

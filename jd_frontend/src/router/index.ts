@@ -19,9 +19,32 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
-  routes
-});
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes: [
+    {
+      path: '/',
+      name: 'default',
+      component: () => import('@/layouts/DefaultLayout.vue'),
+    },
+    {
+      path: '/auth/',
+      name: 'auth',
+      component: () => import('@/layouts/AuthLayout.vue'),
+      children: [
+        {
+          path: 'login',
+          name: 'login',
+          component: () => import('@/views/auth/LoginView.vue'),
+        },
+        {
+          path: 'register',
+          name: 'register',
+          component: () => import('@/views/auth/RegisterView.vue'),
+        },
+      ]
+    },
+  ],
+})
 
 // 路由守卫，验证用户是否登录
 router.beforeEach((to, from, next) => {
