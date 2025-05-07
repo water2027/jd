@@ -25,18 +25,17 @@ func SetupRouter() *gin.Engine {
 		AllowMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders: []string{"Origin", "Content-Type", "Accept", "Authorization"},
 	}))
-	// r.Use(middleware.CorsMiddleware())
 	r.Use(middleware.AuthMiddleware())
 
 	user := controller.NewUserController(service.NewUserService())
 	// 设置路由组
 	api := r.Group("/api")
 	api.POST("/info", user.GetUserInfo)
-	// userRoute := api.Group("/user")
 
 	publicRoute := api.Group("/public")
 	publicRoute.POST("/register", user.Register)
 	publicRoute.POST("/login", user.Login)
+	publicRoute.POST("/reset", user.ResetPassword)
 	publicRoute.POST("/send-code", user.SendVCode)
 
 	return r
