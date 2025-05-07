@@ -51,6 +51,22 @@ func (uc *UserController) Login(c *gin.Context) {
 	dto.SuccessResponse(c, dto.WithData(resp))
 }
 
+func (uc *UserController) ResetPassword(c *gin.Context) {
+	var req user.ResetPasswordRequest
+	err := dto.BindData(c, &req)
+	if err != nil {
+		dto.ErrorResponse(c, dto.WithMessage(err.Error()))
+		return
+	}
+
+	err = uc.userService.ResetPassword(&req)
+	if err != nil {
+		dto.ErrorResponse(c, dto.WithMessage(err.Error()))
+		return
+	}
+	dto.SuccessResponse(c, dto.WithMessage("密码重置成功"))
+}
+
 func (uc *UserController) SendVCode(c *gin.Context) {
 	var req user.SendVCodeRequest
 	err := dto.BindData(c, &req)

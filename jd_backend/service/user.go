@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"jd/database"
 	dto "jd/dto/user"
 	userModel "jd/model/user"
@@ -90,6 +91,46 @@ func (us *UserService) Login(req *dto.LoginRequest) (*dto.LoginResponse, error) 
 	loginResp.Name = user.Name
 
 	return &loginResp, nil
+}
+
+func (us *UserService) ResetPassword(req *dto.ResetPasswordRequest) error {
+	var err error
+
+	// 查询用户
+	db := database.GetMysqlDb()
+	user := userModel.User{}
+	if err = db.Where("telephone = ?", req.Telephone).First(&user).Error; err != nil {
+		return errors.New("用户不存在")
+	}
+
+	// 校验验证码
+	code, err := database.GetValue(req.Telephone)
+	if err != nil {
+		return err
+	}
+
+	if code != req.VCode {
+		err = errors.New("验证码错误")
+		return err
+	}
+
+	hashPass, err := utils.HashPassword(req.Password)
+	if err != nil {
+		return err
+	}
+
+	user.Password = hashPass
+
+	
+	// 删除验证码
+	err = database.DeleteValue(req.Telephone)
+	if err != nil {
+		return fmt.Errorf("服务器错误")
+	}
+
+	db.Save(&user)
+
+	return nil
 }
 
 func (us *UserService) SendVCode(req *dto.SendVCodeRequest) error {
