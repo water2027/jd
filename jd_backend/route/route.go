@@ -1,8 +1,8 @@
 package route
 
 import (
-	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
 	"os"
 
 	"jd/controller"
@@ -47,7 +47,8 @@ func SetupRouter() *gin.Engine {
 	publicRoute.POST("/reset", user.ResetPassword)
 	publicRoute.POST("/send-code", user.SendVCode)
 
-	publicRoute.POST("/get-post", post.GetPost)
+	publicRoute.POST("/posts", post.GetPost)
+	publicRoute.GET("/posts", post.GetMaxId)
 
 	return r
 }

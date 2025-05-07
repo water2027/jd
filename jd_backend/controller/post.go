@@ -60,3 +60,12 @@ func (pc *PostController) GetPost(c *gin.Context) {
 	fmt.Println(posts)
 	dto.SuccessResponse(c, dto.WithData(posts))
 }
+
+func (pc *PostController) GetMaxId(c *gin.Context) {
+	maxId, err := pc.postService.GetMaxId()
+	if err != nil {
+		dto.ErrorResponse(c, dto.WithMessage(err.Error()))
+		return
+	}
+	dto.SuccessResponse(c, dto.WithData(maxId))
+}

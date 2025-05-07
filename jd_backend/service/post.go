@@ -55,14 +55,13 @@ func (ps *PostService) GetPosts(req postDto.GetPostRequest) (postDto.GetPostResp
 	}
 
 	for _, result := range results {
-		post := postDto.Post{
+		post := postDto.SimplePost{
 			ID: result.ID,
 			Author: postDto.User{
 				Id:   result.UserID,
 				Name: result.UserName,
 			},
 			Title:        result.Post.Title,
-			Content:      result.Post.Content,
 			CoverImage:   result.Post.CoverImage,
 			LikeCount:    result.Post.LikeCount,
 			CommentCount: result.Post.CommentCount,
@@ -75,4 +74,13 @@ func (ps *PostService) GetPosts(req postDto.GetPostRequest) (postDto.GetPostResp
 	}
 
 	return resp, nil
+}
+
+func (ps *PostService) GetMaxId() (postDto.GetMaxIdResponse, error) {
+	var maxId int64
+	db := database.GetMysqlDb()
+	if err := db.Table("post").Select("MAX(id)").Scan(&maxId).Error; err != nil {
+		return 0, err
+	}
+	return postDto.GetMaxIdResponse(maxId), nil
 }
