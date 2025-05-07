@@ -1,11 +1,13 @@
 package controller
 
 import (
+	"fmt"
+
 	"github.com/gin-gonic/gin"
 
-	"jd/service"
 	"jd/dto"
 	"jd/dto/post"
+	"jd/service"
 )
 
 type PostController struct {
@@ -42,3 +44,19 @@ func (pc *PostController) CreatePost(c *gin.Context) {
 	dto.SuccessResponse(c)
 }
 
+func (pc *PostController) GetPost(c *gin.Context) {
+	var req post.GetPostRequest
+	err := dto.BindData(c, &req)
+	if err != nil {
+		dto.ErrorResponse(c, dto.WithMessage(err.Error()))
+		return
+	}
+
+	posts, err := pc.postService.GetPosts(req)
+	if err != nil {
+		dto.ErrorResponse(c, dto.WithMessage(err.Error()))
+		return
+	}
+	fmt.Println(posts)
+	dto.SuccessResponse(c, dto.WithData(posts))
+}

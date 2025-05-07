@@ -6,10 +6,10 @@ import (
 )
 
 type User struct {
-	ID        uint   `gorm:"primaryKey"`
-	Name      string `gorm:"type:varchar(100);not null"`
-	Telephone string `gorm:"type:varchar(100);uniqueIndex;not null"`
-	Password  string `gorm:"type:varchar(100);not null"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID        uint      `gorm:"primaryKey"`
+	Name      string    `gorm:"type:varchar(100);not null"`
+	Telephone string    `gorm:"type:varchar(100);uniqueIndex;not null"`
+	Password  string    `gorm:"type:varchar(100);not null"`
+	CreatedAt time.Time `gorm:"autoCreateTime"`
+	UpdatedAt time.Time `gorm:"autoUpdateTime"`
 }

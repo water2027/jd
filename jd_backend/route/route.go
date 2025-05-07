@@ -41,10 +41,13 @@ func SetupRouter() *gin.Engine {
 	postRoute.POST("/create", post.CreatePost)
 
 	publicRoute := api.Group("/public")
+
 	publicRoute.POST("/register", user.Register)
 	publicRoute.POST("/login", user.Login)
 	publicRoute.POST("/reset", user.ResetPassword)
 	publicRoute.POST("/send-code", user.SendVCode)
+
+	publicRoute.POST("/get-post", post.GetPost)
 
 	return r
 }

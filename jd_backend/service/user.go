@@ -29,6 +29,7 @@ func (us *UserService) Register(req *dto.RegisterRequest) (dto.RegisterResponse,
 
 	// 校验邮箱是否已注册
 	db := database.GetMysqlDb()
+	db = db.Model(&userModel.User{})
 	if err = db.Where("email = ?", req.Telephone).First(&user).Error; err == nil {
 		return registerResp, errors.New("邮箱已注册")
 	}
@@ -71,6 +72,7 @@ func (us *UserService) Login(req *dto.LoginRequest) (*dto.LoginResponse, error) 
 
 	// 查询用户
 	db := database.GetMysqlDb()
+	db = db.Model(&userModel.User{})
 	user := userModel.User{}
 	if err = db.Where("telephone = ?", req.Telephone).First(&user).Error; err != nil {
 		return nil, errors.New("用户不存在")
@@ -98,6 +100,7 @@ func (us *UserService) ResetPassword(req *dto.ResetPasswordRequest) error {
 
 	// 查询用户
 	db := database.GetMysqlDb()
+	db = db.Model(&userModel.User{})
 	user := userModel.User{}
 	if err = db.Where("telephone = ?", req.Telephone).First(&user).Error; err != nil {
 		return errors.New("用户不存在")
@@ -160,6 +163,7 @@ func (uc *UserService) GetUserInfo(req *dto.GetUserInfoRequest) (*dto.GetUserInf
 
 	// 查询用户
 	db := database.GetMysqlDb()
+	db = db.Model(&userModel.User{})
 	user := userModel.User{}
 	if err = db.Where("id = ?", req.Id).First(&user).Error; err != nil {
 		return nil, errors.New("用户不存在")
