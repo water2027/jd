@@ -42,11 +42,12 @@ const router = createRouter({
 
 // 路由守卫，验证用户是否登录
 router.beforeEach((to, from, next) => {
-  if (to.meta.requiresAuth && !localStorage.getItem('token')) {
-    next('/login')
-  } else {
-    next()
-  }
+  // if (to.meta.requiresAuth && !localStorage.getItem('token')) {
+  //   next('/login')
+  // } else {
+  //   next()
+  // }
+  next()
 })
 
 const logout = () => {
