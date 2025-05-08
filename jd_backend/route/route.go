@@ -1,9 +1,10 @@
 package route
 
 import (
+	"os"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"os"
 
 	"jd/controller"
 	"jd/service"
@@ -16,7 +17,7 @@ func SetupRouter() *gin.Engine {
 
 	origin := os.Getenv("FRONTEND_URL")
 	if origin == "" {
-		origin = "http://localhost:5173" // 默认值
+		origin = "http://localhost:8081" // 变成前端实际端口
 	}
 
 	// 设置跨域请求
