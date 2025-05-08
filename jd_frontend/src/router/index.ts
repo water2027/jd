@@ -10,13 +10,18 @@ const router = createRouter({
       component: () => import('@/layouts/DefaultLayout.vue'),
       children: [
         {
-          path: '/upload',
+          path: 'upload',
           component: () => import('@/views/UploadView.vue'),
           meta: { requiresAuth: true }, // 需要登录才能访问
         },
         {
-          path: '/post', // 添加 /post 路由规则
+          path: 'post', // 添加 /post 路由规则
           component: () => import('@/views/PostPage.vue'),
+        },
+        {
+          path: 'create-post',
+          component: () => import('@/views/CreatePost.vue'), // 修改为新创建的组件
+          meta: { requiresAuth: true },
         },
       ],
     },
