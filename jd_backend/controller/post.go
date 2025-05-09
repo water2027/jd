@@ -28,13 +28,13 @@ func (pc *PostController) CreatePost(c *gin.Context) {
 		return
 	}
 
-	id, exist := c.Get("userId")
-	if !exist {
-		dto.ErrorResponse(c, dto.WithMessage("userId not found"))
-		return
-	}
+	// id, exist := c.Get("userId")
+	// if !exist {
+	// 	dto.ErrorResponse(c, dto.WithMessage("userId not found"))
+	// 	return
+	// }
 
-	req.AuthorID = id.(uint)
+	req.AuthorID = 0
 
 	err = pc.postService.CreatePost(req)
 	if err != nil {
@@ -44,15 +44,15 @@ func (pc *PostController) CreatePost(c *gin.Context) {
 	dto.SuccessResponse(c)
 }
 
-func (pc *PostController) GetPost(c *gin.Context) {
-	var req post.GetPostRequest
+func (pc *PostController) GetPostsList(c *gin.Context) {
+	var req post.GetPostsListRequest
 	err := dto.BindData(c, &req)
 	if err != nil {
 		dto.ErrorResponse(c, dto.WithMessage(err.Error()))
 		return
 	}
 
-	posts, err := pc.postService.GetPosts(req)
+	posts, err := pc.postService.GetPostsList(req)
 	if err != nil {
 		dto.ErrorResponse(c, dto.WithMessage(err.Error()))
 		return
@@ -68,4 +68,20 @@ func (pc *PostController) GetMaxId(c *gin.Context) {
 		return
 	}
 	dto.SuccessResponse(c, dto.WithData(maxId))
+}
+
+func (pc *PostController) GetPostById(c *gin.Context) {
+	var req post.GetPostRequest
+	err := dto.BindData(c, &req)
+	if err != nil {
+		dto.ErrorResponse(c, dto.WithMessage(err.Error()))
+		return
+	}
+
+	post, err := pc.postService.GetPost(req)
+	if err != nil {
+		dto.ErrorResponse(c, dto.WithMessage(err.Error()))
+		return
+	}
+	dto.SuccessResponse(c, dto.WithData(post))
 }

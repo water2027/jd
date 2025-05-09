@@ -15,11 +15,11 @@ const router = createRouter({
           meta: { requiresAuth: true }, // 需要登录才能访问
         },
         {
-          path: 'post', // 添加 /post 路由规则
+          path: '', // 添加 /post 路由规则
           component: () => import('@/views/PostPage.vue'),
         },
         {
-          path: 'create-post',
+          path: 'create',
           component: () => import('@/views/CreatePost.vue'), // 修改为新创建的组件
           meta: { requiresAuth: true },
         },

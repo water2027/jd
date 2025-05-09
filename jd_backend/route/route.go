@@ -17,7 +17,7 @@ func SetupRouter() *gin.Engine {
 
 	origin := os.Getenv("FRONTEND_URL")
 	if origin == "" {
-		origin = "http://localhost:8081" // 变成前端实际端口
+		origin = "http://localhost:5173" // 变成前端实际端口
 	}
 
 	// 设置跨域请求
@@ -27,6 +27,8 @@ func SetupRouter() *gin.Engine {
 		AllowHeaders: []string{"Origin", "Content-Type", "Accept", "Authorization"},
 	}))
 	r.Use(middleware.AuthMiddleware())
+
+	r.Static("/media", "./uploads")
 
 	user := controller.NewUserController(service.NewUserService())
 	media := controller.NewMediaController(service.NewMediaService())
@@ -48,8 +50,9 @@ func SetupRouter() *gin.Engine {
 	publicRoute.POST("/reset", user.ResetPassword)
 	publicRoute.POST("/send-code", user.SendVCode)
 
-	publicRoute.POST("/posts", post.GetPost)
+	publicRoute.POST("/posts", post.GetPostsList)
 	publicRoute.GET("/posts", post.GetMaxId)
+	publicRoute.POST("/posts-by-id", post.GetPostById)
 
 	return r
 }

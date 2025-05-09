@@ -4,20 +4,28 @@ import (
 	"time"
 )
 
-type User struct {
-	Id   uint   `json:"id"`
-	Name string `json:"name"`
+type GetPostsListRequest struct {
+	Limit  int `json:"limit"`
+	LastId int `json:"id"`
 }
 
-type Post struct {
+type SimplePost struct {
 	ID           uint      `json:"id"`
 	Author       User      `json:"author"`
 	Title        string    `json:"title"`
-	Content      string    `json:"content"`
 	CoverImage   string    `json:"cover"`
 	ViewCount    int       `json:"views"`
 	LikeCount    int       `json:"likes"`
 	CommentCount int       `json:"comments"`
 	CreatedAt    time.Time `json:"created_at"`
 	UpdatedAt    time.Time `json:"updated_at"`
+}
+
+type GetPostsListResponse []SimplePost
+
+func (gpr *GetPostsListRequest) Examine() error {
+	if gpr.Limit <= 0 {
+		gpr.Limit = 10
+	}
+	return nil
 }

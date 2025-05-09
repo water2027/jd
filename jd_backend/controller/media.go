@@ -29,7 +29,7 @@ type MediaController struct {
 func NewMediaController(mediaService *service.MediaService) *MediaController {
 	basePath := os.Getenv("BASE_PATH")
 	if basePath == "" {
-		basePath = "http://localhost:8080" // 默认值
+		basePath = "http://localhost:8080/media" // 默认值
 	}
 	return &MediaController{
 		mediaService: mediaService,
@@ -40,16 +40,17 @@ func NewMediaController(mediaService *service.MediaService) *MediaController {
 
 
 func (mc *MediaController) UploadImage(c *gin.Context) {
-	userId, exist := c.Get("userId")
-	if !exist {
-		c.JSON(401, gin.H{
-			"errno": 1,
-			"msg":   "User not authenticated",
-		})
-		return
-	}
+	// userId, exist := c.Get("userId")
+	// if !exist {
+	// 	c.JSON(401, gin.H{
+	// 		"errno": 1,
+	// 		"msg":   "User not authenticated",
+	// 	})
+	// 	return
+	// }
 
-	authorId := userId.(uint)
+	// authorId := userId.(uint)
+	authorId := uint(0)
 
 	form, err := c.MultipartForm()
 	if err != nil {
@@ -90,13 +91,14 @@ func (mc *MediaController) UploadImage(c *gin.Context) {
 			rawFileName := fileHeader.Filename
 			fileName := generateRandomFileName(rawFileName)
 			fullFilePath := filepath.Join(storePath, fileName)
-
+			fmt.Println("fullFilePath", fullFilePath)
 			if err := c.SaveUploadedFile(fileHeader, fullFilePath); err != nil {
 				fmt.Printf("Failed to save file: %v", err)
 				continue
 			}
 
-			url := filepath.Join(mc.basePath, fileFolder, fileName)
+			// url := filepath.Join(mc.basePath, fileName)
+			url := fmt.Sprintf("%s/%s", mc.basePath, fileName)
 			imgLink := ImageResponse{
 				URL:  url,
 				Alt:  rawFileName,

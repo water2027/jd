@@ -2,12 +2,10 @@
   <div class="container">
     <!-- 左侧导航栏（保留原有功能） -->
     <div class="nav">
-      <button @click="router.push('/create-post')" class="new-post-btn">
-        发布新帖子
-      </button>
+      <button @click="router.push('/create')" class="new-post-btn">发布新帖子</button>
       <div v-for="post in posts" :key="post.id" class="post-item">
-        {{ post.createTime }}
-        <button @click="viewPost(post)" class="view-btn">查看</button>
+        {{ new Date(post.created_at).toLocaleString() }} - {{ post.title }}
+        <button @click="viewPost(post.id)" class="view-btn">查看</button>
       </div>
     </div>
 
@@ -26,15 +24,8 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
-import axios from 'axios'
 import { useRouter, RouterLink } from 'vue-router' // 导入 RouterLink
-
-// 保留原始帖子类型定义（与原代码一致）
-interface Post {
-  id: number;
-  createTime: string;
-  content: string;
-}
+import { getPostsList, getMaxId, type Post, getPost } from '@/api/post/get'
 
 const router = useRouter()
 // 保留原始数据声明（与原代码一致）
@@ -44,16 +35,25 @@ const selectedPost = ref<Post | null>(null)
 // 保留原始数据获取逻辑（与原代码一致）
 onMounted(async () => {
   try {
-    const res = await axios.get<{ data: Post[] }>('/api/posts')
-    posts.value = res.data.data
+    const res = await getPostsList({ limit: 10, id: 10 })
+    posts.value = res
   } catch (error) {
     console.error('获取帖子列表失败:', error)
   }
 })
 
 // 保留原始查看逻辑（与原代码一致）
-const viewPost = (post: Post) => {
-  selectedPost.value = post
+const viewPost = async (id: number) => {
+  try {
+    const res = await getPost({ id })
+    if (res) {
+      selectedPost.value = res
+    } else {
+      console.error('获取帖子内容失败')
+    }
+  } catch (error) {
+    console.error('获取帖子内容失败:', error)
+  }
 }
 </script>
 

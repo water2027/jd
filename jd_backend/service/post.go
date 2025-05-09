@@ -29,8 +29,8 @@ func (ps *PostService) CreatePost(req postDto.CreatePostRequest) error {
 	return nil
 }
 
-func (ps *PostService) GetPosts(req postDto.GetPostRequest) (postDto.GetPostResponse, error) {
-	var resp postDto.GetPostResponse
+func (ps *PostService) GetPostsList(req postDto.GetPostsListRequest) (postDto.GetPostsListResponse, error) {
+	var resp postDto.GetPostsListResponse
 
 	type QueryResult struct {
 		postModel.Post
@@ -83,4 +83,41 @@ func (ps *PostService) GetMaxId() (postDto.GetMaxIdResponse, error) {
 		return 0, err
 	}
 	return postDto.GetMaxIdResponse(maxId), nil
+}
+
+func (ps *PostService) GetPost(req postDto.GetPostRequest) (postDto.GetPostResponse, error) {
+	type QueryResult struct {
+		postModel.Post
+		UserID   uint   `gorm:"column:user_id"`
+		UserName string `gorm:"column:user_name"`
+	}
+
+	db := database.GetMysqlDb()
+
+	query := db.Table("post").
+		Select("post.*, user.id AS user_id, user.name AS user_name").
+		Joins("LEFT JOIN user ON post.author_id = user.id").
+		Where("post.id = ?", req.Id)
+	
+	var result QueryResult
+	if err := query.Scan(&result).Error; err != nil {
+		return postDto.GetPostResponse{}, err
+	}
+	resp := postDto.GetPostResponse{
+		ID: result.ID,
+		Title: result.Title,
+		Author: postDto.User{
+			Id:   result.UserID,
+			Name: result.UserName,
+		},
+		Content:      result.Content,
+		CoverImage:   result.CoverImage,
+		LikeCount:    result.LikeCount,
+		CommentCount: result.CommentCount,
+		ViewCount:    result.ViewCount,
+		CreatedAt:    result.CreatedAt,
+		UpdatedAt:    result.UpdatedAt,
+	}
+
+	return resp, nil
 }
