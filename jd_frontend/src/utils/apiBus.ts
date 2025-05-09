@@ -8,7 +8,7 @@ interface ApiEvents {
   'API:LOGIN': {
     token: string
     name: string
-    avatar: string
+    avatar?: string
     stop?: boolean
   }
 }
