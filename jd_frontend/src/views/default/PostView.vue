@@ -4,7 +4,7 @@
     <div class="nav">
       <button @click="router.push('/create')" class="new-post-btn">发布新帖子</button>
       <div v-for="post in posts" :key="post.id" class="post-item">
-        {{ new Date(post.created_at).toLocaleString() }} - {{ post.title }}
+        {{ post.title }}
         <button @click="viewPost(post.id)" class="view-btn">查看</button>
       </div>
     </div>

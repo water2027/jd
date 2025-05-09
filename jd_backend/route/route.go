@@ -38,7 +38,7 @@ func SetupRouter() *gin.Engine {
 	api.POST("/info", user.GetUserInfo)
 
 	mediaRoute := api.Group("/media")
-	mediaRoute.POST("/upload-image", media.UploadImage)
+	mediaRoute.POST("/upload", media.UploadImage)
 
 	postRoute := api.Group("/post")
 	postRoute.POST("/create", post.CreatePost)

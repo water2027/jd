@@ -15,14 +15,15 @@ import (
 )
 
 type ImageResponse struct {
-	URL  string `json:"url"`
-	Alt  string `json:"alt"`
-	Href string `json:"href"`
+	URL    string `json:"url"`
+	Alt    string `json:"alt"`
+	Poster string `json:"poster"`
 }
 
 const fileFolder = "uploads"
+
 type MediaController struct {
-	basePath string
+	basePath     string
 	mediaService *service.MediaService
 }
 
@@ -33,11 +34,9 @@ func NewMediaController(mediaService *service.MediaService) *MediaController {
 	}
 	return &MediaController{
 		mediaService: mediaService,
-		basePath: basePath,
+		basePath:     basePath,
 	}
 }
-
-
 
 func (mc *MediaController) UploadImage(c *gin.Context) {
 	// userId, exist := c.Get("userId")
@@ -91,21 +90,18 @@ func (mc *MediaController) UploadImage(c *gin.Context) {
 			rawFileName := fileHeader.Filename
 			fileName := generateRandomFileName(rawFileName)
 			fullFilePath := filepath.Join(storePath, fileName)
-			fmt.Println("fullFilePath", fullFilePath)
 			if err := c.SaveUploadedFile(fileHeader, fullFilePath); err != nil {
 				fmt.Printf("Failed to save file: %v", err)
 				continue
 			}
 
-			// url := filepath.Join(mc.basePath, fileName)
 			url := fmt.Sprintf("%s/%s", mc.basePath, fileName)
 			imgLink := ImageResponse{
 				URL:  url,
 				Alt:  rawFileName,
-				Href: url,
 			}
 			media := mediaModel.Media{
-				AuthorID: authorId,
+				AuthorID:  authorId,
 				MediaType: 1,
 				MediaURL:  url,
 			}
