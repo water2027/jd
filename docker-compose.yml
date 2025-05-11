@@ -33,7 +33,7 @@ services:
       DB_LOG_LEVEL: silent
       REDIS_HOST: redis
       REDIS_PORT: 6379
-      GIN_MODE: release
+      GIN_MODE: debug
       # REDIS_PASSWORD: 
       
   mysql:
