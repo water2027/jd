@@ -39,17 +39,19 @@ func NewMediaController(mediaService *service.MediaService) *MediaController {
 }
 
 func (mc *MediaController) UploadImage(c *gin.Context) {
-	// userId, exist := c.Get("userId")
-	// if !exist {
-	// 	c.JSON(401, gin.H{
-	// 		"errno": 1,
-	// 		"msg":   "User not authenticated",
-	// 	})
-	// 	return
-	// }
-
-	// authorId := userId.(uint)
 	authorId := uint(0)
+	if os.Getenv("GIN_MODE") == "release" {
+		userId, exist := c.Get("userId")
+		if !exist {
+			c.JSON(401, gin.H{
+				"errno": 1,
+				"msg":   "User not authenticated",
+			})
+			return
+		}
+	
+		authorId = userId.(uint)
+	}
 
 	form, err := c.MultipartForm()
 	if err != nil {

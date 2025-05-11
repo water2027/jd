@@ -2,6 +2,7 @@ package controller
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/gin-gonic/gin"
 
@@ -28,13 +29,15 @@ func (pc *PostController) CreatePost(c *gin.Context) {
 		return
 	}
 
-	// id, exist := c.Get("userId")
-	// if !exist {
-	// 	dto.ErrorResponse(c, dto.WithMessage("userId not found"))
-	// 	return
-	// }
-
 	req.AuthorID = 0
+	if os.Getenv("GIN_MODE") == "release" {
+		id, exist := c.Get("userId")
+		if !exist {
+			dto.ErrorResponse(c, dto.WithMessage("userId not found"))
+			return
+		}
+		req.AuthorID = id.(uint)
+	}
 
 	err = pc.postService.CreatePost(req)
 	if err != nil {
