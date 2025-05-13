@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="root">
     <!-- 左侧导航栏（保留原有功能） -->
     <div class="nav">
       <button @click="router.push('/create')" class="new-post-btn">发布新帖子</button>
@@ -28,11 +28,9 @@ import { useRouter, RouterLink } from 'vue-router' // 导入 RouterLink
 import { getPostsList, getMaxId, type Post, getPost } from '@/api/post/get'
 
 const router = useRouter()
-// 保留原始数据声明（与原代码一致）
 const posts = ref<Post[]>([])
 const selectedPost = ref<Post | null>(null)
 
-// 保留原始数据获取逻辑（与原代码一致）
 onMounted(async () => {
   try {
     const res = await getPostsList({ limit: 10, id: 10 })
@@ -42,7 +40,6 @@ onMounted(async () => {
   }
 })
 
-// 保留原始查看逻辑（与原代码一致）
 const viewPost = async (id: number) => {
   try {
     const res = await getPost({ id })
@@ -57,69 +54,70 @@ const viewPost = async (id: number) => {
 }
 </script>
 
-<style scoped>
-/* 仅调整登录按钮样式（与页面风格一致） */
-.login-container {
-  text-align: right;
-  margin-bottom: 1rem;
-  padding: 0 0.5rem;
-}
-
-.login-btn {
-  color: #2563eb; /* 与导航栏按钮颜色一致 */
-  text-decoration: none;
-  font-size: 0.9rem;
-  cursor: pointer;
-}
-
-/* 以下为原有样式（与之前一致，未修改） */
-.container {
+<style scoped lang="scss">
+.root {
   display: flex;
-  min-height: 100vh;
-}
-
-.nav {
-  flex: 1;
-  max-width: 200px;
-  border-right: 1px solid #e5e7eb;
-  padding: 1rem;
-  background: #f8f9fa;
-}
-
-.new-post-btn {
   width: 100%;
-  padding: 0.5rem;
-  background: #2563eb;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-bottom: 1rem;
-}
+  height: 100%;
 
-.post-item {
-  padding: 0.5rem;
-  border-radius: 4px;
-  margin-bottom: 0.5rem;
-  transition: background 0.2s;
-}
+  .nav {
+    flex: 1;
+    border-right: 1px solid #e5e7eb;
+    padding: 1rem;
+    max-width: 200px;
+    background: #f8f9fa;
 
-.post-item:hover {
-  background: #e5e7eb;
-}
+    .new-post-btn {
+      width: 100%;
+      padding: 0.5rem;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-bottom: 1rem;
+    }
 
-.view-btn {
-  margin-left: 1rem;
-  padding: 0.2rem 0.5rem;
-  background: #64748b;
-  color: white;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-}
+    .post-item {
+      padding: 0.5rem;
+      border-radius: 4px;
+      margin-bottom: 0.5rem;
+      transition: background 0.2s;
+    }
 
-.content {
-  flex: 5;
-  padding: 2rem;
+    .post-item:hover {
+      background: #e5e7eb;
+    }
+
+    .view-btn {
+      margin-left: 1rem;
+      padding: 0.2rem 0.5rem;
+      background: #64748b;
+      color: white;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+  }
+
+  .content {
+    flex: 6;
+    padding: 1rem;
+
+    overflow-x: auto;
+    overflow-y: auto;
+
+    .login-container {
+      text-align: right;
+      margin-bottom: 1rem;
+      padding: 0 0.5rem;
+      .login-btn {
+        color: #2563eb; /* 与导航栏按钮颜色一致 */
+        text-decoration: none;
+        font-size: 0.9rem;
+        cursor: pointer;
+      }
+    }
+  }
 }
 </style>
